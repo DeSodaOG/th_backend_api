@@ -15,7 +15,7 @@ import pg from 'pg';
 const { Pool } = pg;
 
 const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL,
+    connectionString: process.env.POSTGRES_URL,
 })
 
 pool.connect((err) => {
@@ -44,7 +44,7 @@ app.use("/health-check", healthCheckRouter);
 app.use("/users", userRouter);
 
 // Swagger UI
-app.use(openAPIRouter);
+// app.use(openAPIRouter);
 
 // Error handlers
 app.use(errorHandler());
