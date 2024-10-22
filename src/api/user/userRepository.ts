@@ -60,7 +60,7 @@ export class UserRepository {
     tgHandle: string,
   ) {
     try {
-      await this.pool.query('INSERT INTO tele_hunter(id, referrerID, parentReferrerID, affiliateAmount, subAffiliateAmount, createdAt, updatedAt, score, tgHandle) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)', [
+      const { rows } = await this.pool.query('INSERT INTO tele_hunter(id, referrerID, parentReferrerID, affiliateAmount, subAffiliateAmount, createdAt, updatedAt, score, tgHandle) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *', [
         id,
         referrerID,
         parentReferrerID,
@@ -71,6 +71,7 @@ export class UserRepository {
         10000,
         tgHandle
       ]);
+      console.log(rows)
     } catch (err) {
       console.log(err);
     }
