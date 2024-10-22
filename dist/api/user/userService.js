@@ -4484,8 +4484,8 @@ var UserController = class {
     const userService = new UserService();
     const serviceResponse = await userService.createNewUser(
       req.body.id,
-      req.body.referrerID,
-      req.body.tgHandle
+      req.body.tgHandle,
+      req.body.referrerID
     );
     return handleServiceResponse(serviceResponse, res);
   };
@@ -4794,6 +4794,7 @@ var UserService = class {
         if (!user) {
           const createdAt = /* @__PURE__ */ new Date();
           const updatedAt = createdAt;
+          console.log(referrerID);
           if (referrerID != "0") {
             const referrerUser = await this.userRepository.findByIdAsync(referrerID);
             console.log(referrerUser);

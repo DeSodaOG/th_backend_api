@@ -78,6 +78,7 @@ export class UserService {
         if (!user) {
           const createdAt = new Date();
           const updatedAt = createdAt;
+          console.log(referrerID)
           if (referrerID != '0') {
             const referrerUser = await this.userRepository.findByIdAsync(referrerID);
             console.log(referrerUser)
