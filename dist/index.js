@@ -4458,7 +4458,7 @@ var GetUserSchema = import_zod3.z.object({
 var CreateUserSchema = import_zod3.z.object({
   body: import_zod3.z.object({
     id: import_zod3.z.string(),
-    // pfpURL: z.string().url(),
+    tgHandle: import_zod3.z.string(),
     referrerID: import_zod3.z.string()
   })
 });
@@ -4500,9 +4500,9 @@ var UserRepository = class {
       return null;
     }
   }
-  async createNewUser(id, referrerID, parentReferrerID, affiliateAmount, subAffiliateAmount, createdAt, updatedAt) {
+  async createNewUser(id, referrerID, parentReferrerID, affiliateAmount, subAffiliateAmount, createdAt, updatedAt, tgHandle) {
     try {
-      await this.pool.query("INSERT INTO tele_hunter tele_hunter(id, referrerID, parentReferrerID, affiliateAmount, subAffiliateAmount, createdAt, updatedAt, score) VALUES($1, $2, $3, $4, $5, $6, $7, $8)", [
+      await this.pool.query("INSERT INTO tele_hunter tele_hunter(id, referrerID, parentReferrerID, affiliateAmount, subAffiliateAmount, createdAt, updatedAt, score, tgHandle) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)", [
         id,
         referrerID,
         parentReferrerID,
@@ -4510,7 +4510,8 @@ var UserRepository = class {
         subAffiliateAmount,
         createdAt,
         updatedAt,
-        1e4
+        1e4,
+        tgHandle
       ]);
     } catch (err) {
       console.log(err);
@@ -4613,7 +4614,7 @@ var UserService = class {
     }
   }
   // Retrieves a single user by their ID
-  async createNewUser(id, referrerID) {
+  async createNewUser(id, tgHandle, referrerID) {
     try {
       const isPaid = true;
       let parentReferrerID = "0";
@@ -4647,7 +4648,8 @@ var UserService = class {
             0,
             0,
             createdAt,
-            updatedAt
+            updatedAt,
+            tgHandle
           );
           return ServiceResponse.success("User joined successful", null);
         }
@@ -4684,7 +4686,8 @@ var UserController = class {
     const userService = new UserService();
     const serviceResponse = await userService.createNewUser(
       req.body.id,
-      req.body.referrerID
+      req.body.referrerID,
+      req.body.tgHandle
     );
     return handleServiceResponse(serviceResponse, res);
   };

@@ -44,7 +44,7 @@ var GetUserSchema = import_zod.z.object({
 var CreateUserSchema = import_zod.z.object({
   body: import_zod.z.object({
     id: import_zod.z.string(),
-    // pfpURL: z.string().url(),
+    tgHandle: import_zod.z.string(),
     referrerID: import_zod.z.string()
   })
 });

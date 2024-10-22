@@ -25,7 +25,7 @@ export const GetUserSchema = z.object({
 export const CreateUserSchema = z.object({
   body: z.object({
     id: z.string(),
-    // pfpURL: z.string().url(),
+    tgHandle: z.string(),
     referrerID: z.string(),
   }),
 });

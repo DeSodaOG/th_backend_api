@@ -57,9 +57,10 @@ export class UserRepository {
     subAffiliateAmount: number,
     createdAt: Date,
     updatedAt: Date,
+    tgHandle: string,
   ) {
     try {
-      await this.pool.query('INSERT INTO tele_hunter tele_hunter(id, referrerID, parentReferrerID, affiliateAmount, subAffiliateAmount, createdAt, updatedAt, score) VALUES($1, $2, $3, $4, $5, $6, $7, $8)', [
+      await this.pool.query('INSERT INTO tele_hunter tele_hunter(id, referrerID, parentReferrerID, affiliateAmount, subAffiliateAmount, createdAt, updatedAt, score, tgHandle) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)', [
         id,
         referrerID,
         parentReferrerID,
@@ -67,7 +68,8 @@ export class UserRepository {
         subAffiliateAmount,
         createdAt,
         updatedAt,
-        10000
+        10000,
+        tgHandle
       ]);
     } catch (err) {
       console.log(err);

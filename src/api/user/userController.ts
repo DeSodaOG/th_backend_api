@@ -30,6 +30,7 @@ class UserController {
     const serviceResponse = await userService.createNewUser(
       req.body.id,
       req.body.referrerID,
+      req.body.tgHandle
     );
 
     return handleServiceResponse(serviceResponse, res);

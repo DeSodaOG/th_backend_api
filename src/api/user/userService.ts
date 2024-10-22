@@ -66,6 +66,7 @@ export class UserService {
   // Retrieves a single user by their ID
   async createNewUser(
     id: string,
+    tgHandle: string,
     referrerID: string,
   ): Promise<ServiceResponse<User | null>> {
     try {
@@ -105,7 +106,8 @@ export class UserService {
             0,
             0,
             createdAt,
-            updatedAt
+            updatedAt,
+            tgHandle
           );
           return ServiceResponse.success<null>("User joined successful", null);
         }
