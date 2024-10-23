@@ -11,7 +11,7 @@ export class UserRepository {
   async findAllAsync() {
     try {
 
-      const { rows } = await this.pool.query<User[]>('SELECT * FROM tele_hunter where id != 0 ORDER BY score DESC LIMIT 100 ');
+      const { rows } = await this.pool.query<User[]>('SELECT * FROM tele_hunter where id <> \'0\' ORDER BY score DESC LIMIT 100 ');
 
       // console.log(rows); // 结果集
       return rows;
