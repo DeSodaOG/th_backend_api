@@ -4765,7 +4765,7 @@ var UserService = class {
               if (parentReferrerID != "0") {
                 const parentReferrerUser = await this.userRepository.findByIdAsync(parentReferrerID);
                 const subAffiliateAmount = parentReferrerUser?.subaffiliateamount ?? 0;
-                const newParentReferrerScore = parentReferrerUser?.score ?? 0 + 4e4;
+                const newParentReferrerScore = (parentReferrerUser?.score ?? 0) + 4e4;
                 await this.userRepository.updateParentReferrerAffiliate(parentReferrerID, subAffiliateAmount + 1, updatedAt, newParentReferrerScore);
               }
             }

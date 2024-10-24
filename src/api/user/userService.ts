@@ -94,7 +94,7 @@ export class UserService {
               if (parentReferrerID != "0") {
                 const parentReferrerUser = await this.userRepository.findByIdAsync(parentReferrerID);
                 const subAffiliateAmount = parentReferrerUser?.subaffiliateamount ?? 0;
-                const newParentReferrerScore = parentReferrerUser?.score ?? 0 + 40000;
+                const newParentReferrerScore = (parentReferrerUser?.score ?? 0) + 40000;
                 await this.userRepository.updateParentReferrerAffiliate(parentReferrerID, subAffiliateAmount + 1, updatedAt, newParentReferrerScore)
               }
             }
