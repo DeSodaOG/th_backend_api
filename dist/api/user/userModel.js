@@ -30,12 +30,12 @@ var import_zod = require("zod");
 (0, import_zod_to_openapi.extendZodWithOpenApi)(import_zod.z);
 var UserSchema = import_zod.z.object({
   id: import_zod.z.string(),
-  referrerID: import_zod.z.string(),
-  parentReferrerID: import_zod.z.string(),
-  affiliateAmount: import_zod.z.number(),
-  subAffiliateAmount: import_zod.z.number(),
-  createdAt: import_zod.z.date(),
-  updatedAt: import_zod.z.date(),
+  referrerid: import_zod.z.string(),
+  parentreferrerid: import_zod.z.string(),
+  affiliateamount: import_zod.z.number(),
+  subaffiliateamount: import_zod.z.number(),
+  createdat: import_zod.z.date(),
+  updatedat: import_zod.z.date(),
   score: import_zod.z.number()
 });
 var GetUserSchema = import_zod.z.object({

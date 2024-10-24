@@ -4444,12 +4444,12 @@ var import_zod3 = require("zod");
 (0, import_zod_to_openapi2.extendZodWithOpenApi)(import_zod3.z);
 var UserSchema = import_zod3.z.object({
   id: import_zod3.z.string(),
-  referrerID: import_zod3.z.string(),
-  parentReferrerID: import_zod3.z.string(),
-  affiliateAmount: import_zod3.z.number(),
-  subAffiliateAmount: import_zod3.z.number(),
-  createdAt: import_zod3.z.date(),
-  updatedAt: import_zod3.z.date(),
+  referrerid: import_zod3.z.string(),
+  parentreferrerid: import_zod3.z.string(),
+  affiliateamount: import_zod3.z.number(),
+  subaffiliateamount: import_zod3.z.number(),
+  createdat: import_zod3.z.date(),
+  updatedat: import_zod3.z.date(),
   score: import_zod3.z.number()
 });
 var GetUserSchema = import_zod3.z.object({
@@ -4483,7 +4483,7 @@ var UserRepository = class {
   }
   async findAffiliateByIdAsync(id) {
     try {
-      const { rows } = await this.pool.query("SELECT * FROM tele_hunter WHERE referrerID = $1 ORDER BY affiliateAmount DESC", [id]);
+      const { rows } = await this.pool.query("SELECT * FROM tele_hunter WHERE referrerid = $1 ORDER BY affiliateamount DESC", [id]);
       return rows;
     } catch (err) {
       console.log(err);
@@ -4502,7 +4502,7 @@ var UserRepository = class {
   }
   async createNewUser(id, referrerID, parentReferrerID, affiliateAmount, subAffiliateAmount, createdAt, updatedAt, tgHandle) {
     try {
-      const { rows } = await this.pool.query("INSERT INTO tele_hunter(id, referrerID, parentReferrerID, affiliateAmount, subAffiliateAmount, createdAt, updatedAt, score, tgHandle) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *", [
+      const { rows } = await this.pool.query("INSERT INTO tele_hunter(id, referrerid, parentreferrerid, affiliateamount, subaffiliateamount, createdat, updatedat, score, tghandle) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *", [
         id,
         referrerID,
         parentReferrerID,
@@ -4520,14 +4520,14 @@ var UserRepository = class {
   }
   async updateReferrerAffiliate(id, affiliateAmount, updatedAt, score) {
     try {
-      await this.pool.query("UPDATE tele_hunter SET affiliateAmount = $1, updatedAt = $2, score = $3 WHERE id = $4", [affiliateAmount, updatedAt, score, id]);
+      await this.pool.query("UPDATE tele_hunter SET affiliateamount = $1, updatedat = $2, score = $3 WHERE id = $4", [affiliateAmount, updatedAt, score, id]);
     } catch (err) {
       console.log(err);
     }
   }
   async updateParentReferrerAffiliate(id, subAffiliateAmount, updatedAt, score) {
     try {
-      await this.pool.query("UPDATE tele_hunter SET subAffiliateAmount = $1, updatedAt = $2, score = $3 WHERE id = $4", [subAffiliateAmount, updatedAt, score, id]);
+      await this.pool.query("UPDATE tele_hunter SET subaffiliateAmount = $1, updatedat = $2, score = $3 WHERE id = $4", [subAffiliateAmount, updatedAt, score, id]);
     } catch (err) {
       console.log(err);
     }
@@ -4628,16 +4628,16 @@ var UserService = class {
           if (referrerID != "0") {
             const referrerUser = await this.userRepository.findByIdAsync(referrerID);
             console.log(referrerUser);
-            parentReferrerID = referrerUser?.referrerID ?? "0";
+            parentReferrerID = referrerUser?.referrerid ?? "0";
             if (!referrerUser) {
               return ServiceResponse.failure("Invalid referrer", null, import_http_status_codes4.StatusCodes.FORBIDDEN);
             } else {
-              const affiliateAmount = referrerUser?.affiliateAmount ?? 0;
+              const affiliateAmount = referrerUser?.affiliateamount ?? 0;
               const newReferrerScore = referrerUser.score + 2e4;
               await this.userRepository.updateReferrerAffiliate(referrerID, affiliateAmount + 1, updatedAt, newReferrerScore);
               if (parentReferrerID != "0") {
                 const parentReferrerUser = await this.userRepository.findByIdAsync(parentReferrerID);
-                const subAffiliateAmount = parentReferrerUser?.subAffiliateAmount ?? 0;
+                const subAffiliateAmount = parentReferrerUser?.subaffiliateamount ?? 0;
                 const newParentReferrerScore = parentReferrerUser?.score ?? 0 + 4e4;
                 await this.userRepository.updateParentReferrerAffiliate(parentReferrerID, subAffiliateAmount + 1, updatedAt, newParentReferrerScore);
               }

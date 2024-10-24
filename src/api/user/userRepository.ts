@@ -24,7 +24,7 @@ export class UserRepository {
 
   async findAffiliateByIdAsync(id: string) {
     try {
-      const { rows } = await this.pool.query('SELECT * FROM tele_hunter WHERE referrerID = $1 ORDER BY affiliateAmount DESC', [id]);
+      const { rows } = await this.pool.query('SELECT * FROM tele_hunter WHERE referrerid = $1 ORDER BY affiliateamount DESC', [id]);
 
       // console.log(results); // 结果集
       return rows;
@@ -60,7 +60,7 @@ export class UserRepository {
     tgHandle: string,
   ) {
     try {
-      const { rows } = await this.pool.query('INSERT INTO tele_hunter(id, referrerID, parentReferrerID, affiliateAmount, subAffiliateAmount, createdAt, updatedAt, score, tgHandle) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *', [
+      const { rows } = await this.pool.query('INSERT INTO tele_hunter(id, referrerid, parentreferrerid, affiliateamount, subaffiliateamount, createdat, updatedat, score, tghandle) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *', [
         id,
         referrerID,
         parentReferrerID,
@@ -84,7 +84,7 @@ export class UserRepository {
     score: number
   ) {
     try {
-      await this.pool.query('UPDATE tele_hunter SET affiliateAmount = $1, updatedAt = $2, score = $3 WHERE id = $4', [affiliateAmount, updatedAt, score, id]);
+      await this.pool.query('UPDATE tele_hunter SET affiliateamount = $1, updatedat = $2, score = $3 WHERE id = $4', [affiliateAmount, updatedAt, score, id]);
     } catch (err) {
       console.log(err);
     }
@@ -97,7 +97,7 @@ export class UserRepository {
     score: number
   ) {
     try {
-      await this.pool.query('UPDATE tele_hunter SET subAffiliateAmount = $1, updatedAt = $2, score = $3 WHERE id = $4', [subAffiliateAmount, updatedAt, score, id]);
+      await this.pool.query('UPDATE tele_hunter SET subaffiliateAmount = $1, updatedat = $2, score = $3 WHERE id = $4', [subAffiliateAmount, updatedAt, score, id]);
     } catch (err) {
       console.log(err);
     }

@@ -82,18 +82,18 @@ export class UserService {
           if (referrerID != '0') {
             const referrerUser = await this.userRepository.findByIdAsync(referrerID);
             console.log(referrerUser)
-            parentReferrerID = referrerUser?.referrerID ?? "0";
+            parentReferrerID = referrerUser?.referrerid ?? "0";
             if (!referrerUser) {
               return ServiceResponse.failure("Invalid referrer", null, StatusCodes.FORBIDDEN);
             } else {
 
-              const affiliateAmount = referrerUser?.affiliateAmount ?? 0;
+              const affiliateAmount = referrerUser?.affiliateamount ?? 0;
               const newReferrerScore = referrerUser.score + 20000;
               await this.userRepository.updateReferrerAffiliate(referrerID, affiliateAmount + 1, updatedAt, newReferrerScore);
 
               if (parentReferrerID != "0") {
                 const parentReferrerUser = await this.userRepository.findByIdAsync(parentReferrerID);
-                const subAffiliateAmount = parentReferrerUser?.subAffiliateAmount ?? 0;
+                const subAffiliateAmount = parentReferrerUser?.subaffiliateamount ?? 0;
                 const newParentReferrerScore = parentReferrerUser?.score ?? 0 + 40000;
                 await this.userRepository.updateParentReferrerAffiliate(parentReferrerID, subAffiliateAmount + 1, updatedAt, newParentReferrerScore)
               }

@@ -8,12 +8,12 @@ extendZodWithOpenApi(z);
 export type User = z.infer<typeof UserSchema>;
 export const UserSchema = z.object({
   id: z.string(),
-  referrerID: z.string(),
-  parentReferrerID: z.string(),
-  affiliateAmount: z.number(),
-  subAffiliateAmount: z.number(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  referrerid: z.string(),
+  parentreferrerid: z.string(),
+  affiliateamount: z.number(),
+  subaffiliateamount: z.number(),
+  createdat: z.date(),
+  updatedat: z.date(),
   score: z.number()
 });
 
