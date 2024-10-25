@@ -4459,12 +4459,29 @@ var CreateUserSchema = import_zod3.z.object({
   body: import_zod3.z.object({
     id: import_zod3.z.string(),
     tgHandle: import_zod3.z.string(),
-    referrerID: import_zod3.z.string()
+    referrerID: import_zod3.z.string(),
+    sig: import_zod3.z.string()
   })
 });
 
 // src/api/user/userService.ts
 var import_http_status_codes4 = require("http-status-codes");
+
+// src/common/utils/chainHandlers.ts
+var import_ton = require("ton");
+var import_ton_core2 = require("ton-core");
+
+// src/assets/TeleHunterFactoryWrapper.ts
+var import_ton_core = require("ton-core");
+
+// src/common/utils/chainHandlers.ts
+var import_ethers = require("ethers");
+function verifySig(message, sig) {
+  const address = import_ethers.ethers.verifyMessage(message, sig);
+  return address.toLowerCase() == process.env.ADDRESS;
+}
+
+// src/api/user/userService.ts
 var UserService = class {
   userRepository;
   constructor() {
@@ -4517,9 +4534,9 @@ var UserService = class {
     }
   }
   // Retrieves a single user by their ID
-  async createNewUser(id, tgHandle, referrerID) {
+  async createNewUser(id, tgHandle, referrerID, sig) {
     try {
-      const isPaid = true;
+      const isPaid = verifySig(id + tgHandle + referrerID, sig);
       let parentReferrerID = "0";
       if (isPaid) {
         const user = await this.userRepository.findByIdAsync(id);
@@ -4559,7 +4576,7 @@ var UserService = class {
         }
         return ServiceResponse.failure("User already joined", null, import_http_status_codes4.StatusCodes.FORBIDDEN);
       } else {
-        return ServiceResponse.failure("User not paid", null, import_http_status_codes4.StatusCodes.FORBIDDEN);
+        return ServiceResponse.failure("User rejected", null, import_http_status_codes4.StatusCodes.FORBIDDEN);
       }
     } catch (ex) {
       const errorMessage = `Error creating new user with id ${id}:, ${ex.message}`;
@@ -4591,7 +4608,8 @@ var UserController = class {
     const serviceResponse = await userService.createNewUser(
       req.body.id,
       req.body.tgHandle,
-      req.body.referrerID
+      req.body.referrerID,
+      req.body.sig
     );
     return handleServiceResponse(serviceResponse, res);
   };

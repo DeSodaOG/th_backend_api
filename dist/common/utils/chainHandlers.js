@@ -20,7 +20,8 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // src/common/utils/chainHandlers.ts
 var chainHandlers_exports = {};
 __export(chainHandlers_exports, {
-  verifyPayment: () => verifyPayment
+  verifyPayment: () => verifyPayment,
+  verifySig: () => verifySig
 });
 module.exports = __toCommonJS(chainHandlers_exports);
 var import_ton = require("ton");
@@ -77,6 +78,7 @@ var HunterItemWrapper = class {
 };
 
 // src/common/utils/chainHandlers.ts
+var import_ethers = require("ethers");
 async function verifyPayment(id, joinAddress) {
   const client = new import_ton.TonClient({
     endpoint: "https://testnet.toncenter.com/api/v2/jsonRPC",
@@ -95,8 +97,13 @@ async function verifyPayment(id, joinAddress) {
     return false;
   }
 }
+function verifySig(message, sig) {
+  const address = import_ethers.ethers.verifyMessage(message, sig);
+  return address.toLowerCase() == process.env.ADDRESS;
+}
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  verifyPayment
+  verifyPayment,
+  verifySig
 });
 //# sourceMappingURL=chainHandlers.js.map

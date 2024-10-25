@@ -45,7 +45,8 @@ var CreateUserSchema = import_zod.z.object({
   body: import_zod.z.object({
     id: import_zod.z.string(),
     tgHandle: import_zod.z.string(),
-    referrerID: import_zod.z.string()
+    referrerID: import_zod.z.string(),
+    sig: import_zod.z.string()
   })
 });
 // Annotate the CommonJS export names for ESM import in node:

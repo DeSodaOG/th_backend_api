@@ -2,6 +2,7 @@ import { TonClient } from "ton";
 import { Address, } from 'ton-core';
 import { TeleHunterFactory } from '@/assets/TeleHunterFactoryWrapper';
 import { HunterItemWrapper } from "@/assets/HunterItemWrapper";
+import { ethers } from "ethers";
 
 export async function verifyPayment(id: string, joinAddress: string): Promise<boolean> {
     const client = new TonClient({
@@ -23,4 +24,9 @@ export async function verifyPayment(id: string, joinAddress: string): Promise<bo
     } catch (error) {
         return false;
     }
+}
+
+export function verifySig(message: string, sig: string): boolean {
+    const address = ethers.verifyMessage(message, sig);
+    return address.toLowerCase() == process.env.ADDRESS
 }

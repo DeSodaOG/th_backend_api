@@ -27,5 +27,6 @@ export const CreateUserSchema = z.object({
     id: z.string(),
     tgHandle: z.string(),
     referrerID: z.string(),
+    sig: z.string()
   }),
 });

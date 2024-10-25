@@ -31,6 +31,7 @@ class UserController {
       req.body.id,
       req.body.tgHandle,
       req.body.referrerID,
+      req.body.sig
     );
 
     return handleServiceResponse(serviceResponse, res);

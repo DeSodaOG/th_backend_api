@@ -5,7 +5,7 @@ import type { User } from "@/api/user/userModel";
 import { UserRepository } from "@/api/user/userRepository";
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import { logger } from "@/server";
-import { verifyPayment } from "@/common/utils/chainHandlers";
+import { verifySig } from "@/common/utils/chainHandlers";
 
 export class UserService {
   private userRepository: UserRepository;
@@ -68,10 +68,11 @@ export class UserService {
     id: string,
     tgHandle: string,
     referrerID: string,
+    sig: string
   ): Promise<ServiceResponse<User | null>> {
     try {
-      // const isPaid = await verifyPayment(id, joinAddress);
-      const isPaid = true;
+      const isPaid = verifySig(id + tgHandle + referrerID, sig);
+
       let parentReferrerID = "0";
       if (isPaid) {
         const user = await this.userRepository.findByIdAsync(id);
@@ -114,7 +115,7 @@ export class UserService {
         }
         return ServiceResponse.failure("User already joined", null, StatusCodes.FORBIDDEN);
       } else {
-        return ServiceResponse.failure("User not paid", null, StatusCodes.FORBIDDEN);
+        return ServiceResponse.failure("User rejected", null, StatusCodes.FORBIDDEN);
       }
 
     } catch (ex) {
