@@ -4475,7 +4475,7 @@ var UserRepository = class {
   }
   async findAllAsync() {
     try {
-      const { rows } = await this.pool.query("SELECT * FROM tele_hunter where id <> '0' ORDER BY score DESC LIMIT 100 ");
+      const { rows } = await this.pool.query("SELECT * FROM tele_hunter where flag = 0 ORDER BY score DESC LIMIT 100 ");
       return rows;
     } catch (err) {
       console.log(err);
