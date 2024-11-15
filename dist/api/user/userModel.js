@@ -20,6 +20,7 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // src/api/user/userModel.ts
 var userModel_exports = {};
 __export(userModel_exports, {
+  ClickUserSchema: () => ClickUserSchema,
   CreateUserSchema: () => CreateUserSchema,
   GetUserSchema: () => GetUserSchema,
   UserSchema: () => UserSchema
@@ -49,8 +50,15 @@ var CreateUserSchema = import_zod.z.object({
     sig: import_zod.z.string()
   })
 });
+var ClickUserSchema = import_zod.z.object({
+  body: import_zod.z.object({
+    id: import_zod.z.string(),
+    referrerID: import_zod.z.string()
+  })
+});
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  ClickUserSchema,
   CreateUserSchema,
   GetUserSchema,
   UserSchema

@@ -4419,6 +4419,12 @@ var CreateUserSchema = import_zod2.z.object({
     sig: import_zod2.z.string()
   })
 });
+var ClickUserSchema = import_zod2.z.object({
+  body: import_zod2.z.object({
+    id: import_zod2.z.string(),
+    referrerID: import_zod2.z.string()
+  })
+});
 
 // src/common/utils/httpHandlers.ts
 var import_http_status_codes3 = require("http-status-codes");
@@ -4573,6 +4579,13 @@ pool.connect((err) => {
   if (err) throw err;
   console.log("Connect to PostgreSQL successfully!");
 });
+var newUserPool = new Pool({
+  connectionString: process.env.CLICK_POSTGRES_URL
+});
+newUserPool.connect((err) => {
+  if (err) throw err;
+  console.log("Connect to CLICK_POSTGRES_URL PostgreSQL successfully!");
+});
 var logger = (0, import_pino.pino)({ name: "server start" });
 var app = (0, import_express2.default)();
 app.set("trust proxy", true);
@@ -4589,8 +4602,10 @@ app.use(errorHandler_default());
 // src/api/user/userRepository.ts
 var UserRepository = class {
   pool;
+  newUserPool;
   constructor() {
     this.pool = pool;
+    this.newUserPool = newUserPool;
   }
   async findAllAsync() {
     try {
@@ -4648,6 +4663,13 @@ var UserRepository = class {
   async updateParentReferrerAffiliate(id, subAffiliateAmount, updatedAt, score) {
     try {
       await this.pool.query("UPDATE tele_hunter SET subaffiliateAmount = $1, updatedat = $2, score = $3 WHERE id = $4", [subAffiliateAmount, updatedAt, score, id]);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  async clickNewUser(id, referrerID, updatedAt) {
+    try {
+      await this.newUserPool.query("INSERT INTO click_user(uid, clickTime, inviteID) VALUES($1, $2, $3) RETURNING *", [id, updatedAt, referrerID]);
     } catch (err) {
       console.log(err);
     }
@@ -4748,6 +4770,17 @@ var UserService = class {
       return ServiceResponse.failure("An error occurred while finding user.", null, import_http_status_codes6.StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
+  async clickNewUser(id, referrerID) {
+    try {
+      const createdAt = /* @__PURE__ */ new Date();
+      await this.userRepository.clickNewUser(id, referrerID, createdAt);
+      return ServiceResponse.success("New Click User", "");
+    } catch (ex) {
+      const errorMessage = `Error input new click user with id ${id}:, ${ex.message}`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure("An error occurred while finding user.", null, import_http_status_codes6.StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
   // Retrieves a single user by their ID
   async createNewUser(id, tgHandle, referrerID, sig) {
     try {
@@ -4818,6 +4851,14 @@ var UserController = class {
     const serviceResponse = await userService.getUserAffiliateByID(req.params.id);
     return handleServiceResponse(serviceResponse, res);
   };
+  clickNewUser = async (req, res) => {
+    const userService = new UserService();
+    const serviceResponse = await userService.clickNewUser(
+      req.body.id,
+      req.body.referrerID
+    );
+    return handleServiceResponse(serviceResponse, res);
+  };
   createNewUser = async (req, res) => {
     const userService = new UserService();
     const serviceResponse = await userService.createNewUser(
@@ -4852,6 +4893,7 @@ userRegistry.registerPath({
 userRouter.get("/:id", validateRequest(GetUserSchema), userController.getUserByID);
 userRouter.get("/getAffiliates/:id", validateRequest(GetUserSchema), userController.getUserAffiliatesByID);
 userRouter.post("/create", validateRequest(CreateUserSchema), userController.createNewUser);
+userRouter.post("/newClick", validateRequest(ClickUserSchema), userController.clickNewUser);
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   userRegistry,

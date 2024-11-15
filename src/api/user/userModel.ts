@@ -30,3 +30,10 @@ export const CreateUserSchema = z.object({
     sig: z.string()
   }),
 });
+
+export const ClickUserSchema = z.object({
+  body: z.object({
+    id: z.string(),
+    referrerID: z.string(),
+  }),
+});

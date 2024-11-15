@@ -63,6 +63,21 @@ export class UserService {
     }
   }
 
+  async clickNewUser(
+    id: string,
+    referrerID: string
+  ) {
+    try {
+      const createdAt = new Date();
+      await this.userRepository.clickNewUser(id, referrerID, createdAt);
+      return ServiceResponse.success<string>("New Click User", '');
+    } catch (ex) {
+      const errorMessage = `Error input new click user with id ${id}:, ${(ex as Error).message}`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure("An error occurred while finding user.", null, StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   // Retrieves a single user by their ID
   async createNewUser(
     id: string,

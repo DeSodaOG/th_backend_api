@@ -23,6 +23,15 @@ pool.connect((err) => {
     console.log("Connect to PostgreSQL successfully!")
 })
 
+const newUserPool = new Pool({
+    connectionString: process.env.CLICK_POSTGRES_URL,
+})
+
+newUserPool.connect((err) => {
+    if (err) throw err
+    console.log("Connect to CLICK_POSTGRES_URL PostgreSQL successfully!")
+})
+
 const logger = pino({ name: "server start" });
 const app: Express = express();
 
@@ -51,4 +60,4 @@ app.use(errorHandler());
 
 
 
-export { app, logger, pool };
+export { app, logger, pool, newUserPool };

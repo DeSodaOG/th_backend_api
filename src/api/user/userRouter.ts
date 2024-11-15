@@ -3,7 +3,7 @@ import express, { type Router } from "express";
 import { z } from "zod";
 
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
-import { CreateUserSchema, GetUserSchema, UserSchema } from "@/api/user/userModel";
+import { CreateUserSchema, GetUserSchema, UserSchema, ClickUserSchema } from "@/api/user/userModel";
 import { validateRequest } from "@/common/utils/httpHandlers";
 import { userController } from "./userController";
 
@@ -34,3 +34,5 @@ userRouter.get("/:id", validateRequest(GetUserSchema), userController.getUserByI
 userRouter.get("/getAffiliates/:id", validateRequest(GetUserSchema), userController.getUserAffiliatesByID);
 
 userRouter.post("/create", validateRequest(CreateUserSchema), userController.createNewUser);
+
+userRouter.post("/newClick", validateRequest(ClickUserSchema), userController.clickNewUser);

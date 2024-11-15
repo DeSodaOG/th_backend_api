@@ -24,6 +24,17 @@ class UserController {
     return handleServiceResponse(serviceResponse, res);
   };
 
+  public clickNewUser: RequestHandler = async (req: Request, res: Response) => {
+    const userService = new UserService();
+
+    const serviceResponse = await userService.clickNewUser(
+      req.body.id,
+      req.body.referrerID,
+    );
+
+    return handleServiceResponse(serviceResponse, res);
+  };
+
   public createNewUser: RequestHandler = async (req: Request, res: Response) => {
     const userService = new UserService();
 

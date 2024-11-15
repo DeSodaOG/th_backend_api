@@ -1,11 +1,13 @@
-import { pool } from "@/server.js";
+import { pool, newUserPool } from "@/server.js";
 import type { User } from "./userModel.js";
 export const users: User[] = [];
 
 export class UserRepository {
   private pool;
+  private newUserPool;
   constructor() {
     this.pool = pool;
+    this.newUserPool = newUserPool;
   }
 
   async findAllAsync() {
@@ -98,6 +100,18 @@ export class UserRepository {
   ) {
     try {
       await this.pool.query('UPDATE tele_hunter SET subaffiliateAmount = $1, updatedat = $2, score = $3 WHERE id = $4', [subAffiliateAmount, updatedAt, score, id]);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async clickNewUser(
+    id: string,
+    referrerID: string,
+    updatedAt: Date,
+  ) {
+    try {
+      await this.newUserPool.query('INSERT INTO click_user(uid, clickTime, inviteID) VALUES($1, $2, $3) RETURNING *', [id, updatedAt, referrerID]);
     } catch (err) {
       console.log(err);
     }
