@@ -29,6 +29,7 @@ class UserController {
 
     const serviceResponse = await userService.clickNewUser(
       req.body.id,
+      req.body.name,
       req.body.referrerID,
     );
 

@@ -53,6 +53,7 @@ var CreateUserSchema = import_zod.z.object({
 var ClickUserSchema = import_zod.z.object({
   body: import_zod.z.object({
     id: import_zod.z.string(),
+    name: import_zod.z.string(),
     referrerID: import_zod.z.string()
   })
 });

@@ -34,6 +34,7 @@ export const CreateUserSchema = z.object({
 export const ClickUserSchema = z.object({
   body: z.object({
     id: z.string(),
+    name: z.string(),
     referrerID: z.string(),
   }),
 });

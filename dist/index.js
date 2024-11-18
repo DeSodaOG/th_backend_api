@@ -4466,6 +4466,7 @@ var CreateUserSchema = import_zod3.z.object({
 var ClickUserSchema = import_zod3.z.object({
   body: import_zod3.z.object({
     id: import_zod3.z.string(),
+    name: import_zod3.z.string(),
     referrerID: import_zod3.z.string()
   })
 });
@@ -4541,9 +4542,9 @@ var UserRepository = class {
       console.log(err);
     }
   }
-  async clickNewUser(id, referrerID, updatedAt) {
+  async clickNewUser(id, referrerID, updatedAt, name) {
     try {
-      await this.newUserPool.query("INSERT INTO click_user(uid, clickTime, inviteID) VALUES($1, $2, $3) RETURNING *", [id, updatedAt, referrerID]);
+      await this.newUserPool.query("INSERT INTO click_user(uid, clickTime, inviteID, name) VALUES($1, $2, $3, $4) RETURNING *", [id, updatedAt, referrerID, name]);
     } catch (err) {
       console.log(err);
     }
@@ -4644,10 +4645,10 @@ var UserService = class {
       return ServiceResponse.failure("An error occurred while finding user.", null, import_http_status_codes4.StatusCodes.INTERNAL_SERVER_ERROR);
     }
   }
-  async clickNewUser(id, referrerID) {
+  async clickNewUser(id, name, referrerID) {
     try {
       const createdAt = /* @__PURE__ */ new Date();
-      await this.userRepository.clickNewUser(id, referrerID, createdAt);
+      await this.userRepository.clickNewUser(id, referrerID, createdAt, name);
       return ServiceResponse.success("New Click User", "");
     } catch (ex) {
       const errorMessage = `Error input new click user with id ${id}:, ${ex.message}`;
@@ -4729,6 +4730,7 @@ var UserController = class {
     const userService = new UserService();
     const serviceResponse = await userService.clickNewUser(
       req.body.id,
+      req.body.name,
       req.body.referrerID
     );
     return handleServiceResponse(serviceResponse, res);

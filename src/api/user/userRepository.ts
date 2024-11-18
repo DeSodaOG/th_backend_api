@@ -109,9 +109,10 @@ export class UserRepository {
     id: string,
     referrerID: string,
     updatedAt: Date,
+    name: string,
   ) {
     try {
-      await this.newUserPool.query('INSERT INTO click_user(uid, clickTime, inviteID) VALUES($1, $2, $3) RETURNING *', [id, updatedAt, referrerID]);
+      await this.newUserPool.query('INSERT INTO click_user(uid, clickTime, inviteID, name) VALUES($1, $2, $3, $4) RETURNING *', [id, updatedAt, referrerID, name]);
     } catch (err) {
       console.log(err);
     }
