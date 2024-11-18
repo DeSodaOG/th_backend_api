@@ -112,7 +112,8 @@ export class UserRepository {
     name: string,
   ) {
     try {
-      await this.newUserPool.query('INSERT INTO click_user(uid, clickTime, inviteID, name) VALUES($1, $2, $3, $4) RETURNING *', [id, updatedAt, referrerID, name]);
+      const { rows } = await this.newUserPool.query('INSERT INTO click_user(uid, clickTime, inviteID, name) VALUES($1, $2, $3, $4) RETURNING *', [id, updatedAt, referrerID, name]);
+      console.log(rows);
     } catch (err) {
       console.log(err);
     }
